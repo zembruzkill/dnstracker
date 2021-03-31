@@ -2,15 +2,12 @@
 
 ## Technologies
 
-This project was developed with the following technologies:
+This project was developed with the following technologies and libraries:
 
 - [Python](https://www.python.org/)
 - [Flask](https://reactjs.org)
 - [SQLite3](https://www.sqlite.org/index.html)
 
-## Libraries
-
-This project was developed with the following libraries:
 
 - [DNSPython](https://www.dnspython.org/)
 
