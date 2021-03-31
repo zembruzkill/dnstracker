@@ -1,7 +1,3 @@
-<h1 align="center">
-    <img alt="DNSTracker" title="#dnstracker" src=".github/logo.png" width="250px" />
-</h1>
-
 <h1 align="center">DNSTracker</h1>
 
 ## Technologies
