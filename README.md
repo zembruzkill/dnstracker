@@ -21,11 +21,15 @@ The DNSTracker is a project that allow us to measure the DNS infrastructure in t
 
 ## API endpoints
 
-1. GET '/dns_query' get all queries
-2. GET '/dns_query/<version_id>' get queries from a especific version of execution (version_id)
-3. POST '/dns_query' post a new query
-4. GET '/run_version/ get all executions
-2. POST '/run_version' post a new version (represents a new colection)
+### GET
+
+1. `/dns_query` get all queries
+2. `/dns_query/<version_id>` get queries from a especific version of execution (version_id)
+3. `/run_version/` get all executions
+
+### POST
+1. `/dns_query` post a new query
+2. `/run_version` post a new version (represents a new colection)
 
 ## DNS Query exemple for a "NS"
 ```JSON
