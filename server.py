@@ -57,7 +57,7 @@ class DNSQuery(Resource):
 class DNSQuery_Data(Resource):
     def get(self, query_id):
         conn = get_db()
-        query = conn.execute("select * from dns_query where id =%d "  %int(query_id))
+        query = conn.execute("select * from dns_query where version_id =%d "  %int(query_id))
         result = {'data': [dict(zip(tuple(query.keys()), i))
                            for i in query.cursor]}
         return jsonify(result)

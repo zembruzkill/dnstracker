@@ -19,6 +19,14 @@ The DNSTracker is a project that allow us to measure the DNS infrastructure in t
 * The server provides API endpoints that are used to write and read the DNS queries.
 * The crawler uses a list of domains and performs DNS queries for each of these and save using a API endpoint.
 
+## API endpoints
+
+1. GET '/dns_query' get all queries
+2. GET '/dns_query/<version_id>' get queries from a especific version of execution (version_id)
+3. POST '/dns_query' post a new query
+4. GET '/run_version/ get all executions
+2. POST '/run_version' post a new version (represents a new colection)
+
 ## DNS Query exemple for a "NS"
 ```JSON
 {
