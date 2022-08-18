@@ -11,6 +11,8 @@ flask-jsonpify = "*"
 flask-sqlalchemy = "*"
 flask-restful = "*"
 flask-limiter = "*"
+dnspython = "*"
+requests = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.10"

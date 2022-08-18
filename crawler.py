@@ -146,13 +146,14 @@ def getMXRecord(address):
         answers = dns.resolver.resolve(address, 'MX')
         for rdata in answers:
             now = datetime.now()
+            mx_split = rdata.to_text().split()
             query = {}
             query['domain'] = address
             query['version_id'] = 1
-            query['query_name'] = rdata.to_text()
-            query['query_type'] = 'NS'    
-            query['ipv4_address'] = ",".join(getSimpleARecord(rdata.to_text())).join(("[","]"))
-            query['ipv6_address'] = ",".join(getSimpleAAAARecord(rdata.to_text())).join(("[","]"))
+            query['query_name'] = mx_split[1]
+            query['query_type'] = 'MX'    
+            query['ipv4_address'] = ",".join(getSimpleARecord(mx_split[1])).join(("[","]"))
+            query['ipv6_address'] = ",".join(getSimpleAAAARecord(mx_split[1])).join(("[","]"))
             query['as_number'] = None
             query['as_name'] = None
             query['bgp_prefix'] = None
@@ -160,7 +161,7 @@ def getMXRecord(address):
             query['created_at'] = now.isoformat()
             query['updated_at'] = now.isoformat()
 
-            print('query NS', query)
+            print('query MX', query)
 
             postQuery(query)
 
@@ -180,7 +181,7 @@ def getRecordsFromAuth(fqdn):
 
     getARecord(fqdn)
     getAAAARecord(fqdn)
-    getNSRecord(fqdn)
+    # getNSRecord(fqdn)
     getMXRecord(fqdn)
 
     return True
@@ -205,15 +206,15 @@ else:
 
     with open(sys.argv[1], 'r') as f:
         lines = f.readlines()
-        for k in lines:
-            # sp = k.split(",")
-            domain = k.strip()
+        for k in lines[:30000]:
+            sp = k.split(",")
+            domain = sp[1].strip()
             ip = resolver
             domainList.append(domain)
     
     with concurrent.futures.ProcessPoolExecutor(max_workers=50) as executor:
         for result in executor.map(getRecordsFromAuth, domainList):
-            print('ok')
+            pass
 
 
             
