@@ -54,6 +54,29 @@ class DNSQuery(Resource):
         except:
             return {'status':'error'}
 
+    def update(self):
+        try:
+            conn = get_db()
+            print(request.json)
+            conn.execute("UPDATE dns_query SET version_id='{0}', domain='{1}', query_type='{2}', query_name='{3}', ipv4_address='{4}', ipv6_address='{5}', as_number='{6}', as_name='{7}', bgp_prefix='{8}', worker_id='{9}', created_at='{10}', updated_at='{11}' WHERE id={12}".format(
+                request.json['version_id'],
+                request.json['domain'],
+                request.json['query_type'],
+                request.json['query_name'],
+                request.json['ipv4_address'],
+                request.json['ipv6_address'],
+                request.json['as_number'],
+                request.json['as_name'],
+                request.json['bgp_prefix'],
+                request.json['worker_id'],
+                request.json['created_at'],
+                request.json['updated_at'],
+                request.json['id']
+            ))
+            return {'status':'success'}
+        except:
+            return {'status':'error'}
+
 class DNSQuery_Data(Resource):
     def get(self, query_id):
         conn = get_db()
