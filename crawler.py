@@ -19,6 +19,16 @@ def postQuery(query):
         print(json_data)
         print(response.text)
 
+def updateQuery(query):
+    json_data = json.dumps(query)
+    response = requests.post(api_url_base+'/dns_query',
+                             json_data, headers=newHeaders)
+
+    print(response.status_code)
+    if response.status_code != 201:
+        print(json_data)
+        print(response.text)
+
 
 def getSimpleARecord(address):
     try:
@@ -52,22 +62,22 @@ def getARecord(address):
         for rdata in answers:
             record.append(rdata.to_text())
 
-        now = datetime.now()
-        query = {}
-        query['domain'] = address
-        query['version_id'] = 1
-        query['query_name'] = address
-        query['query_type'] = 'A'    
-        query['ipv4_address'] = ",".join(record).join(("[","]"))
-        query['ipv6_address'] = None
-        query['as_number'] = None
-        query['as_name'] = None
-        query['bgp_prefix'] = None
-        query['worker_id'] = None
-        query['created_at'] = now.isoformat()
-        query['updated_at'] = now.isoformat()
+            now = datetime.now()
+            query = {}
+            query['domain'] = address
+            query['version_id'] = 1
+            query['query_name'] = address
+            query['query_type'] = 'A'    
+            query['ipv4_address'] = rdata.to_text()
+            query['ipv6_address'] = None
+            query['as_number'] = None
+            query['as_name'] = None
+            query['bgp_prefix'] = None
+            query['worker_id'] = None
+            query['created_at'] = now.isoformat()
+            query['updated_at'] = now.isoformat()
 
-        print('query A', query)
+            print('query A', query)
 
         postQuery(query)
 
@@ -85,24 +95,24 @@ def getAAAARecord(address):
         for rdata in answers:
             record.append(rdata.to_text())
 
-        now = datetime.now()
-        query = {}
-        query['domain'] = address
-        query['version_id'] = 1
-        query['query_name'] = address
-        query['query_type'] = 'AAAA'    
-        query['ipv4_address'] = None
-        query['ipv6_address'] = ",".join(record).join(("[","]"))
-        query['as_number'] = None
-        query['as_name'] = None
-        query['bgp_prefix'] = None
-        query['worker_id'] = None
-        query['created_at'] = now.isoformat()
-        query['updated_at'] = now.isoformat()
+            now = datetime.now()
+            query = {}
+            query['domain'] = address
+            query['version_id'] = 1
+            query['query_name'] = address
+            query['query_type'] = 'AAAA'    
+            query['ipv4_address'] = None
+            query['ipv6_address'] = rdata.to_text()
+            query['as_number'] = None
+            query['as_name'] = None
+            query['bgp_prefix'] = None
+            query['worker_id'] = None
+            query['created_at'] = now.isoformat()
+            query['updated_at'] = now.isoformat()
 
-        print('query AAAA', query)
+            print('query AAAA', query)
 
-        postQuery(query)
+            postQuery(query)
 
         return True
     except Exception as e:
@@ -147,23 +157,43 @@ def getMXRecord(address):
         for rdata in answers:
             now = datetime.now()
             mx_split = rdata.to_text().split()
-            query = {}
-            query['domain'] = address
-            query['version_id'] = 1
-            query['query_name'] = mx_split[1]
-            query['query_type'] = 'MX'    
-            query['ipv4_address'] = ",".join(getSimpleARecord(mx_split[1])).join(("[","]"))
-            query['ipv6_address'] = ",".join(getSimpleAAAARecord(mx_split[1])).join(("[","]"))
-            query['as_number'] = None
-            query['as_name'] = None
-            query['bgp_prefix'] = None
-            query['worker_id'] = None
-            query['created_at'] = now.isoformat()
-            query['updated_at'] = now.isoformat()
+            a_records = getSimpleARecord(mx_split[1])
+            aaaa_records = getSimpleAAAARecord(mx_split[1])
+            for a_record in a_records:
+                query = {}
+                query['domain'] = address
+                query['version_id'] = 1
+                query['query_name'] = mx_split[1]
+                query['query_type'] = 'MX'    
+                query['ipv4_address'] = a_record
+                query['ipv6_address'] = None
+                query['as_number'] = None
+                query['as_name'] = None
+                query['bgp_prefix'] = None
+                query['worker_id'] = None
+                query['created_at'] = now.isoformat()
+                query['updated_at'] = now.isoformat()
 
-            print('query MX', query)
+                print('query MX', query)
+                postQuery(query)
 
-            postQuery(query)
+            for aaaa_record in aaaa_records:
+                query = {}
+                query['domain'] = address
+                query['version_id'] = 1
+                query['query_name'] = mx_split[1]
+                query['query_type'] = 'MX'    
+                query['ipv4_address'] = None
+                query['ipv6_address'] = aaaa_record
+                query['as_number'] = None
+                query['as_name'] = None
+                query['bgp_prefix'] = None
+                query['worker_id'] = None
+                query['created_at'] = now.isoformat()
+                query['updated_at'] = now.isoformat()
+
+                print('query MX', query)
+                postQuery(query)            
 
         return True
     except Exception as e:
